@@ -22,7 +22,7 @@ namespace Coreplus.Sample.Api.Services
 				.Select(pro => new PractitionerReport(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(pro.Key), pro.Sum(y => y.cost), pro.Sum(y => y.revenue)));
 		}
 
-		public async Task<IEnumerable<SinglePractitioner>> GetPractitionersById(long practitionerId, string month)
+		public async Task<IEnumerable<SinglePractitioner>> GetPractitionerById(long practitionerId, string month)
 		{
 			using var fileStream = File.OpenRead(@"./Data/appointments.json");
 			var data = await JsonSerializer.DeserializeAsync<Appointment[]>(fileStream);
@@ -33,6 +33,19 @@ namespace Coreplus.Sample.Api.Services
 
 			return data.Where(x => x.practitioner_id == practitionerId && CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToDateTime(x.date).Month) == month)
 				.Select(y =>  new SinglePractitioner(y.id,y.cost,y.revenue));	
+		}
+
+		public async Task<IEnumerable<Client>> GetClientById(long id)
+		{
+			using var fileStream = File.OpenRead(@"./Data/appointments.json");
+			var data = await JsonSerializer.DeserializeAsync<Appointment[]>(fileStream);
+			if (data == null)
+			{
+				throw new Exception("Data read error");
+			}
+
+			return data.Where(x => x.id == id)
+				.Select(y => new Client(y.id,y.date, y.client_name, y.appointment_type,y.duration));
 		}
 	}
 }

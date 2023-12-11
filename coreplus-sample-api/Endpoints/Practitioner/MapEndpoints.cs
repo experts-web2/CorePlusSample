@@ -9,6 +9,7 @@ public static class MapEndpoints
         group.MapGetPractitionerReport();
         group.MapGetNonSupervisorPractitioners();
         group.MapGetPractitionerByIdReport();
+        group.MapGetClientById();
         return group;
     }
 }

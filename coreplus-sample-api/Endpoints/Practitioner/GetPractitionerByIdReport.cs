@@ -9,7 +9,7 @@ namespace Coreplus.Sample.Api.Endpoints.Practitioner
 		{
 			group.MapGet("/report/{id}", async ([FromServices] PractitionerReportService practitionerReportService, [FromRoute] long id, [FromQuery] string month) =>
 			{
-				var practitioners = await practitionerReportService.GetPractitionersById(id, month);
+				var practitioners = await practitionerReportService.GetPractitionerById(id, month);
 
 				return Results.Ok(practitioners);
 			});
