@@ -18,8 +18,8 @@ namespace Coreplus.Sample.Api.Services
 
 			return data.Where(x => x.practitioner_id == practitionerId && Convert.ToDateTime(x.date) >= startDate && Convert.ToDateTime(x.date) <= endDate)
 				.OrderBy(x => Convert.ToDateTime(x.date))
-				.GroupBy(x => new {x.client_name, Convert.ToDateTime(x.date).Month })
-				.Select(pro => new PractitionerReport(pro.Sum(y => y.cost), pro.Sum(y => y.revenue),pro.FirstOrDefault()?.client_name??string.Empty));
+				.GroupBy(x =>  Convert.ToDateTime(x.date).Month)
+				.Select(pro => new PractitionerReport(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(pro.Key), pro.Sum(y => y.cost), pro.Sum(y => y.revenue)));
 		}
 	}
 }
