@@ -35,7 +35,7 @@ namespace Coreplus.Sample.Api.Services
 				.Select(y =>  new SinglePractitioner(y.id,y.cost,y.revenue));	
 		}
 
-		public async Task<IEnumerable<Client>> GetClientById(long id)
+		public async Task<Client?> GetClientById(long id)
 		{
 			using var fileStream = File.OpenRead(@"./Data/appointments.json");
 			var data = await JsonSerializer.DeserializeAsync<Appointment[]>(fileStream);
@@ -45,7 +45,7 @@ namespace Coreplus.Sample.Api.Services
 			}
 
 			return data.Where(x => x.id == id)
-				.Select(y => new Client(y.id,y.date, y.client_name, y.appointment_type,y.duration));
+				.Select(y => new Client(y.id,y.date, y.client_name, y.appointment_type,y.duration)).FirstOrDefault();
 		}
 	}
 }
