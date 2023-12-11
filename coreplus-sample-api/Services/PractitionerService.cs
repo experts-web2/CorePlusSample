@@ -30,4 +30,16 @@ public class PractitionerService
 
         return data.Where(practitioner => (int)practitioner.level >= 2).Select(prac => new PractitionerDto(prac.id, prac.name));
     }
+
+	public async Task<IEnumerable<PractitionerDto>> GetNonSupervisorPractitioners()
+	{
+		using var fileStream = File.OpenRead(@"./Data/practitioners.json");
+		var data = await JsonSerializer.DeserializeAsync<Practitioner[]>(fileStream);
+		if (data == null)
+		{
+			throw new Exception("Data read error");
+		}
+
+		return data.Where(practitioner => (int)practitioner.level <= 1).Select(prac => new PractitionerDto(prac.id, prac.name));
+	}
 }
