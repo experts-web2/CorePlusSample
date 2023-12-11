@@ -7,9 +7,9 @@ namespace Coreplus.Sample.Api.Endpoints.Practitioner
 	{
 		public static RouteGroupBuilder MapGetPractitionerByIdReport(this RouteGroupBuilder group)
 		{
-			group.MapGet("/report/{id}", async ([FromServices] PractitionerReportService practitionerReportService, [FromRoute] long id, [FromQuery] string month) =>
+			group.MapGet("/report/{id}", async ([FromServices] PractitionerReportService practitionerReportService, [FromRoute] long id, [FromQuery] string month, [FromQuery] int pageNo, [FromQuery] int pageSize) =>
 			{
-				var practitioners = await practitionerReportService.GetPractitionerById(id, month);
+				var practitioners = await practitionerReportService.GetPractitionerById(id, month,pageNo,pageSize);
 
 				return Results.Ok(practitioners);
 			});
