@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "moment": "^2.29.4",
+    "react-dates": "^21.8.0"
+  },
+  "devDependencies": {
+    "@types/react-dates": "^21.8.6"
+  }
+}
