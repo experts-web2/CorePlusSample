@@ -28,7 +28,7 @@ public class PractitionerService
             throw new Exception("Data read error");
         }
 
-        return data.Where(practitioner => (int)practitioner.level >= 2).Select(prac => new PractitionerDto(prac.id, prac.name));
+        return data.Where(practitioner => (int)practitioner.level <= 1).Select(prac => new PractitionerDto(prac.id, prac.name));
     }
 
 	public async Task<IEnumerable<PractitionerDto>> GetNonSupervisorPractitioners()
@@ -40,6 +40,6 @@ public class PractitionerService
 			throw new Exception("Data read error");
 		}
 
-		return data.Where(practitioner => (int)practitioner.level <= 1).Select(prac => new PractitionerDto(prac.id, prac.name));
+		return data.Where(practitioner => (int)practitioner.level >= 2).Select(prac => new PractitionerDto(prac.id, prac.name));
 	}
 }

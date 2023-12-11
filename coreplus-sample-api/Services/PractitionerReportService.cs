@@ -21,5 +21,18 @@ namespace Coreplus.Sample.Api.Services
 				.GroupBy(x =>  Convert.ToDateTime(x.date).Month)
 				.Select(pro => new PractitionerReport(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(pro.Key), pro.Sum(y => y.cost), pro.Sum(y => y.revenue)));
 		}
+
+		public async Task<IEnumerable<SinglePractitioner>> GetPractitionersById(long practitionerId, string month)
+		{
+			using var fileStream = File.OpenRead(@"./Data/appointments.json");
+			var data = await JsonSerializer.DeserializeAsync<Appointment[]>(fileStream);
+			if (data == null)
+			{
+				throw new Exception("Data read error");
+			}
+
+			return data.Where(x => x.practitioner_id == practitionerId && CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToDateTime(x.date).Month) == month)
+				.Select(y =>  new SinglePractitioner(y.id,y.cost,y.revenue));	
+		}
 	}
 }
