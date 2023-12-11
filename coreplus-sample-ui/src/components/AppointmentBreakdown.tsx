@@ -63,7 +63,7 @@ const AppointmentBreakdown: React.FC<any> = ({
             <div
               key={appointment.id}
               className={`p-4 mt-3 bg-white rounded shadow transition transform hover:scale-105 ${
-                activeIndex === index ? "bg-gray-200" : ""
+                activeIndex == index ? "bg-slate-300" : ""
               }`}
             >
               <button
@@ -119,7 +119,7 @@ const AppointmentBreakdown: React.FC<any> = ({
               <div
                 key={detail.id}
                 className={`p-4 rounded shadow hover:shadow-md transition duration-300 ease-in-out cursor-pointer ${
-                  detail.id === detailActiveIndex ? "bg-blue-100" : "bg-white"
+                  detail.id === detailActiveIndex ? "bg-slate-300" : "bg-white"
                 }`}
                 onClick={() => specificAppointmentDetail(detail.id)}
               >
