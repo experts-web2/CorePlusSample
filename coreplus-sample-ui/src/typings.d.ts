@@ -8,7 +8,7 @@ export interface PractitionerListProps {
   }
   
  export interface Practitioner {
-    id: number;
+    id: string | number;
     name: string;
   }
   
@@ -72,4 +72,12 @@ export  interface PractitionerListProps {
  export  interface SuperVisorsListProps {
     supervisors: Supervisor[];
     onSelectPractitioner: (practitioner: Supervisor) => void;
+  }
+
+  export interface AppointmentDetails {
+    appointment_type: string;
+    client_name: string;
+    date: string;
+    duration: number;
+    id: number;
   }

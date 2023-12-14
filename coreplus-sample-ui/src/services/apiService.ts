@@ -56,7 +56,7 @@ const apiService = {
     return axios.get<ReportData[]>(endpoint, { params });
   },
 
-  getSpecificMonth: async (
+  getMonthlyAppointmentList: async (
     practitionerId: number,
     month: string,
     pageNo: number,
@@ -66,7 +66,7 @@ const apiService = {
     return axios.get<ReportData[]>(endpoint);
   },
 
-  getClient: async (clientId: number): Promise<AxiosResponse<ReportData[]>> => {
+  getAppointmentDetail: async (clientId: number): Promise<AxiosResponse<ReportData[]>> => {
     const endpoint = `${API_BASE_URL}${ENDPOINTS.practitioners}${ENDPOINTS.client}/${clientId}`;
     return axios.get<ReportData[]>(endpoint);
   },

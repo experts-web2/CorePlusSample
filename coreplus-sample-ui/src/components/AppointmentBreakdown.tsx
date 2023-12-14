@@ -1,35 +1,40 @@
 import React, { useState, useEffect } from "react";
 import apiService from "../services/apiService";
 import AppointmentDetail from "./AppointmentDetail";
+import AppointmentDetailsList from "./AppointmentDetailsList";
+import HeaderTitle from "./HeaderTitle";
+import { AppointmentDetails } from "../typings";
 
 const ITEMS_PER_PAGE = 3;
 
 const AppointmentBreakdown: React.FC<any> = ({
-  breakdownData,
+  appointmentList,
   selectedPractitioner,
-  fetchData,
+  fetchAppointmentList,
   totalRecords,
 }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [detailActiveIndex, setDetailActiveIndex] = useState<number | null>(
     null
   );
-  const [appointmentDetails, setAppointmentDetails] = useState<any[]>([]);
+  const [appointmentDetailsList, setAppointmentDetailsList] = useState<any[]>(
+    []
+  );
   const [specificAppointmentDetails, setSpecificAppointmentDetails] =
-    useState<any>();
+    useState<AppointmentDetails>();
   const [breakdownPage, setBreakdownPage] = useState<number>(1);
   const [detailsPage, setDetailsPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
 
-  const callSpecificAppointment = async (month: string, index: number) => {
+  const fetchSpecificAppointmentList = async (month: string, index: number) => {
     try {
-      const response = await apiService.getSpecificMonth(
+      const response:any = await apiService.getMonthlyAppointmentList(
         selectedPractitioner?.id,
         month,
         detailsPage,
         ITEMS_PER_PAGE
       );
-      setAppointmentDetails(response.data.data);
+      setAppointmentDetailsList(response.data.data);
       setTotalCount(response.data?.count);
       setActiveIndex(index);
     } catch (error) {
@@ -39,13 +44,16 @@ const AppointmentBreakdown: React.FC<any> = ({
 
   useEffect(() => {
     if (activeIndex !== null) {
-      callSpecificAppointment(breakdownData[activeIndex].month, activeIndex);
+      fetchSpecificAppointmentList(
+        appointmentList[activeIndex].month,
+        activeIndex
+      );
     }
-  }, [detailsPage, totalCount, activeIndex]);
+  }, [detailsPage]);
 
   const specificAppointmentDetail = async (id: number) => {
     try {
-      const response = await apiService.getClient(id);
+      const response:any = await apiService.getAppointmentDetail(id);
       setDetailActiveIndex(id);
       setSpecificAppointmentDetails(response.data);
     } catch (error) {
@@ -55,11 +63,18 @@ const AppointmentBreakdown: React.FC<any> = ({
 
   return (
     <div className="space-y-4 flex flex-row w-100 gap-2">
-      {breakdownData && breakdownData.length > 0 && (
-        <div className="w-3/5 lg:w-2/5 xl:w-1/3">
-          <h3 className="text-xl font-bold text-blue-600 text-center mt-4 mb-2">Total Appointments</h3>
+      {appointmentList && appointmentList.length > 0 && (
+        <div
+          className="w-3/5 lg:w-2/5 xl:w-1/3 first-letter"
+          style={{
+            height: "612px !important",
+            border: "2px solid rgb(191 180 180)",
+            boxShadow: "rgb(176 187 157) 2px 3px 2px",
+          }}
+        >
+          <HeaderTitle title=" Total Appointments" />
 
-          {breakdownData.map((appointment: any, index: number) => (
+          {appointmentList.map((appointment: any, index: number) => (
             <div
               key={appointment.id}
               className={`p-4 mt-3 bg-white rounded shadow transition transform hover:scale-105 ${
@@ -69,21 +84,28 @@ const AppointmentBreakdown: React.FC<any> = ({
               <button
                 className="w-full text-left focus:outline-none"
                 onClick={() =>
-                  callSpecificAppointment(appointment.month, index)
+                  fetchSpecificAppointmentList(appointment.month, index)
                 }
               >
                 <h3 className="text-lg font-bold text-blue-600">
-                  Appointment Cost: {appointment.cost} Revenue:{" "}
-                  {appointment.revenue} Date: {appointment.month}
+                  Appointment Cost: {appointment.cost}{" "}
+                  Revenue: {appointment.revenue}{" "}
+                  Month: {appointment.month}
                 </h3>
               </button>
             </div>
           ))}
-          <div className="flex justify-between mt-4">
+          <div
+            className="flex justify-between"
+            style={{
+              marginTop: "130px",
+              padding: "10px",
+            }}
+          >
             <button
               onClick={() => {
-                setBreakdownPage((prev) => Math.max(prev - 1, 1));
-                fetchData(breakdownPage - 1, 3);
+                setBreakdownPage((prev) => prev - 1);
+                fetchAppointmentList(breakdownPage - 1, 3);
               }}
               className={`px-4 py-2 ${
                 breakdownPage === 1
@@ -96,12 +118,14 @@ const AppointmentBreakdown: React.FC<any> = ({
             </button>
             <button
               onClick={() => {
-                setBreakdownPage((prev) => prev + 1);
-                fetchData(breakdownPage + 1, 3);
+                const nextPage = breakdownPage + 1;
+                setBreakdownPage(nextPage);
+                fetchAppointmentList(nextPage, ITEMS_PER_PAGE);
               }}
+              disabled={breakdownPage * ITEMS_PER_PAGE >= totalRecords}
               className={`px-4 py-2 ${
                 breakdownPage * ITEMS_PER_PAGE >= totalRecords
-                  ? "bg-gray-300 text-gray-600"
+                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                   : "bg-blue-500 text-white hover:bg-blue-600"
               } rounded transition duration-300 ease-in-out`}
             >
@@ -112,46 +136,52 @@ const AppointmentBreakdown: React.FC<any> = ({
       )}
 
       <div className="w-2/5">
-      <h3 className="text-xl font-bold text-blue-600 text-center">Appointment Details</h3>
-        {appointmentDetails && appointmentDetails.length > 0 && (
-          <div className="mt-2">
-            {appointmentDetails.map((detail: any) => (
+        {appointmentDetailsList && appointmentDetailsList.length > 0 && (
+          <div
+            style={{
+              height: "640px !important",
+              border: "2px solid rgb(191 180 180)",
+              boxShadow: "rgb(176 187 157) 2px 3px 2px",
+            }}
+          >
+            <HeaderTitle title="Appointment Details" />
+            <div>
+              <AppointmentDetailsList
+                appointmentDetailsList={appointmentDetailsList}
+                detailActiveIndex={detailActiveIndex}
+                specificAppointmentDetail={specificAppointmentDetail}
+              />
               <div
-                key={detail.id}
-                className={`p-4 rounded shadow hover:shadow-md transition duration-300 ease-in-out cursor-pointer ${
-                  detail.id === detailActiveIndex ? "bg-slate-300" : "bg-white"
-                }`}
-                onClick={() => specificAppointmentDetail(detail.id)}
+                className="flex justify-between mt-4"
+                style={{
+                  marginTop: "160px",
+                  padding: "10px",
+                }}
               >
-                <h3 className="text-lg font-bold text-blue-600">
-                  Appointment Id : {detail.id} Cost: {detail.cost} Revenue:{" "}
-                  {detail.revenue}
-                </h3>
+                <button
+                  onClick={() => setDetailsPage((prev) => prev - 1)}
+                  disabled={detailsPage === 1}
+                  className={`px-4 py-2 ${
+                    detailsPage === 1
+                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600 "
+                  } rounded transition duration-300 ease-in-out`}
+                >
+                  Previous
+                </button>
+                <button
+                  // Fix the conditional check here
+                  disabled={detailsPage * ITEMS_PER_PAGE >= totalCount}
+                  onClick={() => setDetailsPage((prev) => prev + 1)}
+                  className={`px-4 py-2 ${
+                    detailsPage * ITEMS_PER_PAGE >= totalCount
+                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                  } rounded transition duration-300 ease-in-out`}
+                >
+                  Next
+                </button>
               </div>
-            ))}
-            <div className="flex justify-between mt-4">
-              <button
-                onClick={() => setDetailsPage((prev) => prev - 1)}
-                disabled={detailsPage === 1}
-                className={`px-4 py-2 ${
-                  detailsPage === 1
-                    ? "bg-gray-300 text-gray-600"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
-                } rounded transition duration-300 ease-in-out`}
-              >
-                Previous
-              </button>
-              <button
-                disabled={breakdownPage * ITEMS_PER_PAGE >= totalRecords}
-                onClick={() => setDetailsPage((prev) => prev + 1)}
-                className={`px-4 py-2 ${
-                  detailsPage * ITEMS_PER_PAGE >= totalCount
-                    ? "bg-gray-300 text-gray-600"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
-                } rounded transition duration-300 ease-in-out`}
-              >
-                Next
-              </button>
             </div>
           </div>
         )}
