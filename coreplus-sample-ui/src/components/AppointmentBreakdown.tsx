@@ -7,24 +7,19 @@ import { AppointmentDetails } from "../typings";
 
 const ITEMS_PER_PAGE = 3;
 
-const AppointmentBreakdown: React.FC<any> = ({
-  appointmentList,
-  selectedPractitioner,
-  fetchAppointmentList,
-  totalRecords,
-}) => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [detailActiveIndex, setDetailActiveIndex] = useState<number | null>(
+const AppointmentBreakdown: React.FC<any> = ({appointmentList,selectedPractitioner,fetchAppointmentList,totalRecords,}) => {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [detailActiveIndex, setDetailActiveIndex] = useState(
     null
   );
-  const [appointmentDetailsList, setAppointmentDetailsList] = useState<any[]>(
+  const [appointmentDetailsList, setAppointmentDetailsList] = useState(
     []
   );
   const [specificAppointmentDetails, setSpecificAppointmentDetails] =
-    useState<AppointmentDetails>();
-  const [breakdownPage, setBreakdownPage] = useState<number>(1);
-  const [detailsPage, setDetailsPage] = useState<number>(1);
-  const [totalCount, setTotalCount] = useState<number>(0);
+    useState({})
+  const [breakdownPage, setBreakdownPage] = useState(1);
+  const [detailsPage, setDetailsPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   const fetchSpecificAppointmentList = async (month: string, index: number) => {
     try {

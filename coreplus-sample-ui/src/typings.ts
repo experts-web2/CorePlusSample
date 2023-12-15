@@ -1,16 +1,15 @@
+import moment, { Moment } from "moment";
+
 export interface PractitionerListProps {
     supervisors?: Practitioner[];
-    practitioners: {
-      supervisors: Practitioner[];
-      remaining: Practitioner[];
+    practitioners?: {
+      supervisors?: Practitioner[];
+      remaining?: Practitioner[];
     };
-    onSelectPractitioner: (practitioner: Practitioner) => void;
+    onSelectPractitioner?: (practitioner: Practitioner) => void;
   }
   
- export interface Practitioner {
-    id: string | number;
-    name: string;
-  }
+
   
 
  export interface DateRangePickerProps {
@@ -36,16 +35,10 @@ export interface PractitionerListProps {
   }
 
 
-export  interface PractitionerListProps {
-    practitioners: {
-      supervisors: Practitioner[];
-      remaining: Practitioner[];
-    };
-    onSelectPractitioner: (practitioner: Practitioner) => void;
-  }
+
   
  export interface Practitioner {
-    id: number;
+    id: number | string;
     name: string;
     practitioner?: string;
   }
@@ -59,10 +52,6 @@ export  interface PractitionerListProps {
     };
   }
 
-  export interface DateRange {
-    startDate: string;
-    endDate: string;
-  }
 
  export  interface Supervisor {
     id: string;
