@@ -1,3 +1,4 @@
+import React from "react";
 import { AppointmentDetails } from "../typings";
 const AppointmentDetail = ({
   specificAppointmentDetails,

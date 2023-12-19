@@ -1,3 +1,4 @@
+import "react-dates/lib/css/_datepicker.css";
 import "./app.css";
 import React, { useEffect, useState } from "react";
 import PractitionerList from "./components/PractitionerList";
